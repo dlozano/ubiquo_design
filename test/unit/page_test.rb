@@ -355,13 +355,6 @@ class PageTest < ActiveSupport::TestCase
     page.destroy
   end
 
-  def test_should_expire_page_on_save
-    page = create_page
-    caching_on
-    UbiquoDesign.cache_manager.expects(:expire_page).with(page).returns(true)
-    page.save
-  end
-
   def test_should_have_many_widgets
     page = pages(:one)
     assert_equal_set page.blocks.map(&:widgets).flatten, page.widgets

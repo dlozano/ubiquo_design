@@ -16,6 +16,7 @@ class Page < ActiveRecord::Base
   before_save :compose_url_name_with_parent_url
   before_create :assign_template_blocks
   before_save :update_modified, :if => :is_the_draft?
+  before_destroy :expire, :if => :is_the_draft?
   after_destroy :is_modified_on_destroy_published
 
   validates_presence_of :name
