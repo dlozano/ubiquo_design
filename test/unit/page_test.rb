@@ -146,6 +146,21 @@ class PageTest < ActiveSupport::TestCase
     assert_nil page.reload.published
   end
 
+  def test_unpublish_should_expire_the_published_page
+    caching_on
+
+    page = create_page
+    page.publish
+    page.published.expects(:expire).returns(true)
+    assert page.published.unpublish
+    assert !page.reload.published
+
+    page.publish
+    page.published.expects(:expire).returns(true)
+    assert page.unpublish
+    assert !page.published
+  end
+
   def test_shouldnt_publish_wrong_pages
     page = create_page :page_template => "static"
     page.blocks << pages(:one).blocks

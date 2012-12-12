@@ -197,10 +197,10 @@ class Page < ActiveRecord::Base
 
   # Destroy the published page copy if exists.
   def unpublish
-    if self.published
-      self.published.destroy
-    elsif self.draft
-      self.destroy
+    if published
+      (published.expire && published.destroy).tap { self.published.reload }
+    elsif draft
+      expire && destroy
     end
   end
 
