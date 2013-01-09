@@ -205,16 +205,16 @@ module UbiquoDesign
           begin
             ProxyServer.alive.each do |server|
               http = Net::HTTP.new(server.host, server.port)
+              http.open_timeout = http.read_timeout = Ubiquo::Settings[:ubiquo_design][:varnish_request_timeout]
               #http.set_debug_output($stderr)
               http.send_request(method, url, nil, headers || {})
             end
-          rescue
-            Rails.logger.warn "Cache is not available, impossible to delete cache: "+ $!.inspect
+          rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Errno::ECONNREFUSED,
+                 Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError, Net::HTTPForbidden => e
+            Rails.logger.warn "Cache is not available, impossible to delete cache: "+ e.inspect
           end
         end
-
       end
-
     end
   end
 end

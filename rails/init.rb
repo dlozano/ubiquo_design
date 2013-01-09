@@ -62,6 +62,7 @@ Ubiquo::Plugin.register(:ubiquo_design, directory, config) do |config|
   }
   config.add(:async_varnish_expiration, false)
   config.add(:public_host, lambda{|options| 'replaceme.com'})
+  config.add(:varnish_request_timeout, 0.5)
 end
 
 groups = Ubiquo::Config.get :model_groups
